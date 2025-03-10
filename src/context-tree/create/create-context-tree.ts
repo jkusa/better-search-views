@@ -2,6 +2,7 @@ import { CacheItem, FileStats } from "obsidian";
 import { ContextTree, createContextTreeProps, TreeType } from "../../types";
 import {
   getHeadingBreadcrumbs,
+  getHeadingContentPosition,
   getHeadingIndexContaining,
 } from "../../metadata-cache-util/heading";
 import {
@@ -138,7 +139,12 @@ export function createContextTree({
           cache: firstSectionUnderHeading,
           text: getTextAtPosition(
             fileContents,
-            firstSectionUnderHeading.position,
+            getHeadingContentPosition(
+              headingIndexAtPosition,
+              headings,
+              firstSectionUnderHeading,
+              sections[sections.length - 1],
+            ),
           ),
           filePath,
         });

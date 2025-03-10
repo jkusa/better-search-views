@@ -1,4 +1,4 @@
-import { HeadingCache, Pos } from "obsidian";
+import { HeadingCache, Pos, SectionCache } from "obsidian";
 
 export function getHeadingIndexContaining(
   position: Pos,
@@ -59,4 +59,25 @@ export function getHeadingBreadcrumbs(position: Pos, headings: HeadingCache[]) {
   }
 
   return headingBreadcrumbs;
+}
+
+/**
+ * Gets heading content boundaries
+ * Start: first section under the heading.
+ * End: end of the previous section before the next heading (or last section if none).
+ */
+export function getHeadingContentPosition(
+  headingOffset: number, 
+  headings: HeadingCache[], 
+  firstSectionUnderHeading: SectionCache,
+  lastSection: SectionCache
+): Pos {
+  const { level } = headings[headingOffset];
+  const { start } = firstSectionUnderHeading.position;
+  for (let i = headingOffset + 1; i < headings.length; i++) {
+    if (headings[i].level <= level) {
+      return { start, end: headings[i].position.start }
+    }
+  }
+  return { start, end: lastSection.position.end }
 }
